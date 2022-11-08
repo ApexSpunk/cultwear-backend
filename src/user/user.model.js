@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     state: { type: String, required: false },
     pincode: { type: String, required: false },
     phone: { type: String, required: false },
+    type: { type: String, required: true, default: "user" },
 });
 
 const User = mongoose.model('User', userSchema);
