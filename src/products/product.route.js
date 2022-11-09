@@ -22,18 +22,11 @@ var multipleUpload = upload.fields([{ name: 'images', maxCount: 5 }, { name: 'th
 app.get('/', async (req, res) => {
     const { q, category, price, color } = req.query;
     let query = {};
-    if (q) {
-        query = { ...query, title: { $regex: q, $options: 'i' } };
-    }
-    if (category) {
-        query = { ...query, category };
-    }
-    if (price) {
-        query = { ...query, price: { $lte: price } };
-    }
-    if (color) {
-        query = { ...query, color };
-    }
+    if (category) query.category = category;
+    if (color) query.color = { $regex: new RegExp(color, 'i') };
+    if (q) query.title = { $regex: new RegExp(q, 'i') };
+    if (price) query.price = { $lte: price };
+    console.log(query);
     try {
         const products = await Product.find(query);
         res.status(200).send({ data: products });
@@ -57,7 +50,7 @@ app.post('/', middleware, async (req, res) => {
         await product.save();
         res.status(200).send({ message: "Product added successfully", data: product });
     } catch (error) {
-        res.status(400).send({error: error.message});
+        res.status(400).send({ error: error.message });
     }
 });
 
