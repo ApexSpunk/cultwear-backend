@@ -51,10 +51,9 @@ app.get('/:id', async (req, res) => {
     }
 });
 
-app.post('/', middleware, multipleUpload, async (req, res) => {
+app.post('/', middleware, async (req, res) => {
     try {
         const product = new Product(req.body);
-        product.images = req.files.images.map(file => `https://cultwear.onrender.com/public/uploads/${file.filename}`);
         await product.save();
         res.status(200).send({ message: "Product added successfully", data: product });
     } catch (error) {
