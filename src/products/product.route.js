@@ -58,7 +58,7 @@ app.post('/', middleware, multipleUpload, async (req, res) => {
         await product.save();
         res.status(200).send({ message: "Product added successfully", data: product });
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({error: error.message});
     }
 });
 
