@@ -20,6 +20,12 @@ app.use('/user', userRoute);
 app.use('/products', productRoute);
 app.use('/cart', cartRoute);
 
+//get images from uploads folder by name
+app.use('/uploads', express.static('uploads'));
+
+
+
+
 app.get('/', (req, res) => {
     res.status(200).send({ message: "Welcome to the CultWear API" });
 });
