@@ -5,10 +5,19 @@ const middleware = require('../config/middleware');
 const app = express.Router();
 
 app.get('/', async (req, res) => {
-    const { q } = req.query;
+    const { q, category, price, color } = req.query;
     let query = {};
     if (q) {
-        query = { title: { $regex: q, $options: 'i' } };
+        query = { ...query, title: { $regex: q, $options: 'i' } };
+    }
+    if (category) {
+        query = { ...query, category };
+    }
+    if (price) {
+        query = { ...query, price: { $lte: price } };
+    }
+    if (color) {
+        query = { ...query, color };
     }
     try {
         const products = await Product.find(query);
