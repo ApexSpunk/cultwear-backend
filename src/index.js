@@ -21,7 +21,7 @@ app.use('/products', productRoute);
 app.use('/cart', cartRoute);
 
 //get images from uploads folder by name
-app.use('/uploads', express.static('uploads'));
+app.use('/public/uploads', express.static('src/public/uploads'));
 
 
 
