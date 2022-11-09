@@ -5,9 +5,14 @@ const middleware = require('../config/middleware');
 const app = express.Router();
 
 app.get('/', async (req, res) => {
+    const { q } = req.query;
+    let query = {};
+    if (q) {
+        query = { title: { $regex: q, $options: 'i' } };
+    }
     try {
-        const products = await Product.find({});
-        res.status(200).send({data: products});
+        const products = await Product.find(query);
+        res.status(200).send({ data: products });
     } catch (error) {
         res.status(400).send(error);
     }
@@ -16,7 +21,7 @@ app.get('/', async (req, res) => {
 app.get('/:id', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
-        res.status(200).send({data: product});
+        res.status(200).send({ data: product });
     } catch (error) {
         res.status(400).send(error);
     }
