@@ -1,14 +1,19 @@
 const express = require('express');
 require('dotenv').config()
+const cors = require('cors');
 const PORT = process.env.PORT;
 const app = express();
+
+
 const connect = require('./config/connect');
 const userRoute = require('./user/user.route');
 const productRoute = require('./products/product.route');
 const cartRoute = require('./cart/cart.route');
 
 
+
 app.use(express.json())
+app.use(cors())
 
 app.use('/user', userRoute);
 app.use('/products', productRoute);
