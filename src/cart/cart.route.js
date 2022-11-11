@@ -5,10 +5,9 @@ const middleware = require('../config/middleware');
 const app = express.Router();
 
 app.get('/', middleware, async (req, res) => {
-    const { token } = req.headers;
-    const [id] = token.split(':');
+    const id = req.userId;
     try {
-        const cart = await Cart.findOne({ userId: id });
+        const cart = await Cart.find({ userId: id });
         res.status(200).send({ data: cart });
     }
     catch (error) {
@@ -17,16 +16,32 @@ app.get('/', middleware, async (req, res) => {
 });
 
 app.post('/', middleware, async (req, res) => {
-    const { token } = req.headers;
-    const [id] = token.split(':');
+    const id = req.userId;
+    let cartItem = await Cart.findOne({ userId: id, productId: req.body.productId });
+    if (cartItem) {
+        cartItem.quantity = cartItem.quantity + req.body.quantity;
+        cartItem = await cartItem.save().then(() => { return cartItem.populate('productId')});
+    }
+    else {
+        const cart = new Cart(req.body);
+        cart.userId = id;
+        cartItem = await cart.save().then(() => { return cart.populate('productId')});
+    }
+    res.status(200).send({ message: "Cart updated successfully", data: cartItem });
+
+});
+
+app.put('/:id', middleware, async (req, res) => {
+    const id = req.userId;
     try {
-        const cart = new Cart({ ...req.body, userId: id });
-        await cart.save();
-        res.status(200).send({ message: "Item added to cart successfully", data: cart });
-    } catch (error) {
+        const cart = await Cart.findOneAndUpdate({ userId: id, _id: req.params.id }, req.body, { new: true });
+        res.status(200).send({ data: cart });
+    }
+    catch (error) {
         res.status(400).send(error);
     }
 });
+
 
 app.delete('/:id', middleware, async (req, res) => {
     try {
