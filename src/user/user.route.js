@@ -18,7 +18,7 @@ app.post('/register', async (req, res) => {
         const user = new User(req.body);
         await user.save();
         const token = jwt.sign({ id: user._id, email: user.email, password: user.password }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).send({ message: "User registered successfully", data: user, token: token });
+        res.status(200).send({ message: "User registered successfully", data: { user, token } });
     } catch (error) {
         res.status(400).send({ message: "User already exists" });
     }
@@ -28,10 +28,9 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email, password });
-        console.log(user, 'user');
         if (user) {
             const token = jwt.sign({ id: user._id, email: user.email, password: user.password }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.status(200).send({ message: "User logged in successfully", token });
+            res.status(200).send({ message: "User logged in successfully", data: { user, token } });
         } else {
             res.status(401).send({ message: "Invalid credentials" });
         }
