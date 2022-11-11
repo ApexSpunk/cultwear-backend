@@ -26,7 +26,6 @@ app.get('/', async (req, res) => {
     if (color) query.color = { $regex: new RegExp(color, 'i') };
     if (q) query.title = { $regex: new RegExp(q, 'i') };
     if (price) query.price = { $lte: price };
-    console.log(query);
     try {
         const products = await Product.find(query);
         res.status(200).send({ data: products });

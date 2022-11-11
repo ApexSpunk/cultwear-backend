@@ -19,7 +19,7 @@ const middleware = async (req, res, next) => {
             res.status(401).send({ message: "Invalid token" });
         }
     } catch (error) {
-        res.status(401).send({ message: "Operation not allowed" });
+        res.status(401).send({ message: "Invalid token" });
         console.log(error);
     }
 }
