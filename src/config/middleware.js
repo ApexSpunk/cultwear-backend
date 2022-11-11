@@ -1,4 +1,6 @@
 const User = require('../user/user.model');
+var jwt = require('jsonwebtoken');
+
 
 const middleware = async (req, res, next) => {
     let token = req.headers.token;
@@ -6,17 +8,19 @@ const middleware = async (req, res, next) => {
         res.status(401).send({ message: "Token not found" });
         return;
     }
-    let [id, email, password] = token.split(":");
+
     try {
-        const user = await User.findOne({ _id: id, email: email, password: password });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findOne({ _id: decoded.id, email: decoded.email, password: decoded.password });
         if (user) {
-            req.userId = id;
+            req.userId = user._id;
             next();
         } else {
-            res.status(401).send({ message: "Operation not allowed" });
+            res.status(401).send({ message: "Invalid token" });
         }
     } catch (error) {
         res.status(401).send({ message: "Operation not allowed" });
+        console.log(error);
     }
 }
 

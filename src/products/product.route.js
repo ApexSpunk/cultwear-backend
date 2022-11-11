@@ -1,23 +1,23 @@
 const express = require('express');
 const Product = require('./product.model');
 const middleware = require('../config/middleware');
-const multer = require('multer');
+// const multer = require('multer');
 const path = require('path');
 
 const app = express.Router();
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'src/public/uploads')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-    }
-})
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'src/public/uploads')
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+//     }
+// })
 
-var upload = multer({ storage: storage })
+// var upload = multer({ storage: storage })
 
-var multipleUpload = upload.fields([{ name: 'images', maxCount: 5 }, { name: 'thumbnail', maxCount: 1 }])
+// var multipleUpload = upload.fields([{ name: 'images', maxCount: 5 }, { name: 'thumbnail', maxCount: 1 }])
 
 app.get('/', async (req, res) => {
     const { q, category, price, color } = req.query;
