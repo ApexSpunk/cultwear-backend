@@ -20,14 +20,16 @@ const app = express.Router();
 // var multipleUpload = upload.fields([{ name: 'images', maxCount: 5 }, { name: 'thumbnail', maxCount: 1 }])
 
 app.get('/', async (req, res) => {
-    const { q, category, price, color } = req.query;
+    let { q, category, price, color, limit, page } = req.query;
     let query = {};
     if (category) query.category = category;
     if (color) query.color = { $regex: new RegExp(color, 'i') };
     if (q) query.title = { $regex: new RegExp(q, 'i') };
     if (price) query.price = { $lte: price };
+    if(!limit) limit = 12;
+    if(!page) page = 1;
     try {
-        const products = await Product.find(query);
+        const products = await Product.find(query).limit(limit * 1).skip((page - 1) * limit)
         res.status(200).send({ data: products });
     } catch (error) {
         res.status(400).send(error);
