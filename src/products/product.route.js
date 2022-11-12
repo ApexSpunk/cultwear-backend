@@ -22,14 +22,7 @@ const app = express.Router();
 app.get('/', async (req, res) => {
     const { q, category, price, color } = req.query;
     let query = {};
-    if (category) {
-        if(category === 'random') {
-            let randomQuery = ['Mens', 'Womens', 'Kids'];
-            query.category = randomQuery[Math.floor(Math.random() * randomQuery.length)];
-        }else{
-            query.category = category;
-        }
-    }
+    if (category) query.category = category;
     if (color) query.color = { $regex: new RegExp(color, 'i') };
     if (q) query.title = { $regex: new RegExp(q, 'i') };
     if (price) query.price = { $lte: price };
