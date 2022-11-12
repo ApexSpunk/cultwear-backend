@@ -34,7 +34,7 @@ app.post('/', middleware, async (req, res) => {
 app.put('/:id', middleware, async (req, res) => {
     const id = req.userId;
     try {
-        const cart = await Cart.findOneAndUpdate({ userId: id, _id: req.params.id }, req.body, { new: true });
+        const cart = await Cart.findOneAndUpdate({ userId: id, _id: req.params.id }, req.body, { new: true }).populate('productId');
         res.status(200).send({ data: cart });
     }
     catch (error) {
